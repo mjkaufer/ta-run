@@ -6,6 +6,7 @@ var timeoutList = []
 var activeLength = 100
 var shiftDown = false
 var baseNote = 69//midi a4
+var ta = true
 
 
 window.onkeydown = window.onkeyup = function(e){
@@ -45,8 +46,11 @@ document.onkeydown = function(e){
 
 }
 
-function getFileName(i){
-	return 'noises/test_' + i + '.wav'
+function getFileName(i, isTa){
+	var prefix = "run"
+	if(isTa)
+		prefix = "ta"
+	return 'noises/' + prefix + '_' + i + '.wav'
 }
 
 function playNoise(halfStep){
@@ -58,7 +62,8 @@ function playNoise(halfStep){
 
 	toggleActive(keys[(halfStep >=0 && halfStep <= 12) ? halfStep : (halfStep + 144) % 12])
 
-	lowLag.play(getFileName(halfStep))
+	lowLag.play(getFileName(halfStep, ta))
+	ta = !ta
 	//...
 }
 
@@ -77,9 +82,10 @@ function toggleActive(id){
 
 
 function loadNoises(){
-	for(var i = 0; i <= 12; i++){
-		lowLag.load(getFileName(i));
-		i != 0 && lowLag.load(getFileName(-i))
+	for(var i = -12; i <= 12; i++){
+		lowLag.load(getFileName(i, true));
+		lowLag.load(getFileName(i, false));
+		
 	}	
 }
 
