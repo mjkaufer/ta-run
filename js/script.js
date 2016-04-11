@@ -7,6 +7,8 @@ var activeLength = 100
 var shiftDown = false
 var baseNote = 69//midi a4
 var ta = true
+var fixed = false
+var locked = false
 
 
 window.onkeydown = window.onkeyup = function(e){
@@ -39,8 +41,13 @@ function keyCodeToCharacter(keyCode){//219
 
 document.onkeydown = function(e){
 	
+	if(e.which == 32)
+		return e.preventDefault() || toggleTa()
+
+	if(e.which == 90)
+		return (locked = !locked)
+
 	var key = keyCodeToCharacter(e.which)
-	
 
 	playNoise(getHalfStep(key))
 
@@ -63,8 +70,31 @@ function playNoise(halfStep){
 	toggleActive(keys[(halfStep >=0 && halfStep <= 12) ? halfStep : (halfStep + 144) % 12])
 
 	lowLag.play(getFileName(halfStep, ta))
-	ta = !ta
+
+	if(!locked)
+		toggleTa()
 	//...
+}
+
+function removeUnderline(id){
+	document.getElementById(id).classList.remove('underline')
+}
+
+function addUnderline(id){
+	document.getElementById(id).classList.add('underline')
+}
+
+function toggleTa(){
+	ta = !ta
+	if(ta){
+		addUnderline('ta')
+		removeUnderline('run')	
+	} else {
+		addUnderline('run')
+		removeUnderline('ta')
+	}
+	
+
 }
 
 function toggleActive(id){

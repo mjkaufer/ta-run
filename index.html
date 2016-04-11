@@ -66,16 +66,21 @@
 			padding-bottom: 1%;
 		}
 
+		.underline{
+			text-decoration: underline;
+		}
+
 	</style>
 	<script src="lowLag.js"></script>
 	<script src="js/soundmanager2.js"></script>
 	<script src="js/webmidi.js"></script>
 	</head>
 	<body>
-		<h1>Tarun</h1>
+		<h1><span id="ta" class="underline">Ta</span><span id="run">run</span></h1>
 		<h3>A Synthesizer for Tarun</h3>
-		<p>Use your keyboard or just click</p>
-		<p>Hold down the shift key to drop an octave</p>
+		<p>Hold down the <b>shift</b> key to drop an octave</p>
+		<p>Hit the <b>space</b> key to switch between 'ta' and 'run' without playing a key</p>
+		<p>Use the <b>z</b> key to lock the current syllable</p>
 		<p>You can also play with a connected MIDI device!</p>
 		<div id="internetPiano">
 			<!--taken from http://jsfiddle.net/924sefae/6/, modified slightly-->
