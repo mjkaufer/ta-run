@@ -30,6 +30,138 @@ function clearTimeoutList(){
 	}
 })
 
+// var bpm = 120
+var bpm = 120
+
+function quarterNotesToMs(quarterNotes, bpm){
+	return quarterNotes / bpm * 60 * 1000
+}
+
+var noteIndex = 0
+
+var misirlouIntro = [
+	[0,1.5],
+	[1,.5],
+	[4,1],
+	[5,1],
+	[7,1.5],
+	[8,0.5],
+	[11,1],
+	[8,1],
+	[7,1.5],
+	[7,1.5],
+	[7,0.5],
+	[7,0.5],
+	[7,1.5],
+	[7,1.5],
+	[7,0.5],
+	[7,0.5],
+]
+
+var misirlouBridge = [
+	[8,0.5],
+	[8,0.5],
+	[7,0.5],
+	[8,0.5],
+	[7,1],
+	[5,1],
+	[7,0.5],
+	[7,0.5],
+	[5,0.5],
+	[7,0.5],
+	[5,1],
+	[4,0.5],
+	[0,0.5],
+	[4,1],
+	[4,0.5],
+	[4,1],
+	[4,0.5],
+	[4,0.5],
+	[4,0.5],
+	[4,1],
+	[4,0.5],
+	[4,1],
+	[4,0.5],
+	[4,0.5],
+	[0,1],
+
+	[7,0.5],
+	[5,0.5],
+	[7,0.5],
+	[5,1],
+	[4,1],
+	[5,0.5],
+	[5,0.5],
+	[4,0.5],
+	[5,0.5],
+	[4,1],
+	[1,0.5],
+	[4,0.5],
+	[0,1],
+	[0,0.5],
+	[0,1],
+	[0,0.5],
+	[0,0.5],
+	[0,0.5],
+	[0,2],
+]
+
+var misirlouFill = [
+	[12,0.25],
+	[11,0.25],
+	[8,0.25],
+	[7,0.25],
+	[5,0.25],
+	[4,0.25],
+	[1,0.5],
+]
+
+var misirlou = []
+var repeat = true;
+
+var misirlouBody = []
+misirlouBody = misirlouBody.concat(misirlouIntro)
+misirlouBody = misirlouBody.concat(misirlouIntro)
+misirlouBody = misirlouBody.concat(misirlouBridge)
+
+misirlouBodyLower = misirlouBody.map(function(e){
+	var eClone = e.slice(0)
+	eClone[0] -= 12;
+	return eClone
+})
+
+
+misirlou = misirlou.concat(misirlouBodyLower).concat(misirlouFill).concat(misirlouBody).concat(misirlouFill)
+
+
+var songChoice = misirlou
+
+var songIsPlaying = true
+
+function playSong(){
+	noteIndex = 0;
+	playNextNote()
+}
+
+function playNextNote(){
+
+	var data = songChoice[noteIndex]
+	playNoise(data[0], true)
+
+	noteIndex++;
+	if(repeat)
+		noteIndex %= songChoice.length
+	if(songIsPlaying)
+		setTimeout(function(){
+			playNextNote()
+		}, quarterNotesToMs(data[1], bpm))
+}
+
+setTimeout(function(){
+	playSong()
+}, 500)
+
+
 function getHalfStep(key){
 	var keyIndex = keys.indexOf(key)
 	return keyIndex == -1 ? null : keyIndex
@@ -40,6 +172,8 @@ function keyCodeToCharacter(keyCode){//219
 }
 
 document.onkeydown = function(e){
+
+	songIsPlaying = false
 	
 	if(e.which == 32)
 		return e.preventDefault() || toggleTa()
@@ -57,14 +191,14 @@ function getFileName(i, isTa){
 	var prefix = "run"
 	if(isTa)
 		prefix = "ta"
-	return 'noises/' + prefix + '_' + i + '.wav'
+	return prefix + '_' + i + '.wav'
 }
 
-function playNoise(halfStep){
+function playNoise(halfStep, ignoreShift){
 	if(halfStep === null)//will need to fix later to allow negative half steps, but it'll work for now
 		return
 
-	if(shiftDown)
+	if(shiftDown && !ignoreShift)
 		halfStep -= 12
 
 	toggleActive(keys[(halfStep >=0 && halfStep <= 12) ? halfStep : (halfStep + 144) % 12])
@@ -119,7 +253,7 @@ function loadNoises(){
 	}	
 }
 
-lowLag.init()
+lowLag.init({'urlPrefix':'noises/'})
 loadNoises()
 
 WebMidi.enable(
