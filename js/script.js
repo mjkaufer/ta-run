@@ -173,7 +173,6 @@ function keyCodeToCharacter(keyCode){//219
 
 document.onkeydown = function(e){
 
-	songIsPlaying = false
 	
 	if(e.which == 32)
 		return e.preventDefault() || toggleTa()
@@ -197,6 +196,9 @@ function getFileName(i, isTa){
 function playNoise(halfStep, ignoreShift){
 	if(halfStep === null)//will need to fix later to allow negative half steps, but it'll work for now
 		return
+
+	if(!ignoreShift)
+		songIsPlaying = false
 
 	if(shiftDown && !ignoreShift)
 		halfStep -= 12
