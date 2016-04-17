@@ -225,9 +225,11 @@ function toggleTa(){
 	if(ta){
 		addUnderline('ta')
 		removeUnderline('run')	
+		document.title = "run"
 	} else {
 		addUnderline('run')
 		removeUnderline('ta')
+		document.title = "ta"
 	}
 	
 
