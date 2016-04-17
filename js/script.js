@@ -151,10 +151,10 @@ function playNextNote(){
 	noteIndex++;
 	if(repeat)
 		noteIndex %= songChoice.length
-	if(songIsPlaying)
-		setTimeout(function(){
+	setTimeout(function(){
+		if(songIsPlaying)
 			playNextNote()
-		}, quarterNotesToMs(data[1], bpm))
+	}, quarterNotesToMs(data[1], bpm))
 }
 
 setTimeout(function(){
@@ -179,7 +179,7 @@ document.onkeydown = function(e){
 		return e.preventDefault() || toggleTa()
 
 	if(e.which == 90)
-		return (locked = !locked)
+		return (locked = !locked) || (locked || toggleTa())
 
 	var key = keyCodeToCharacter(e.which)
 
