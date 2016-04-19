@@ -31,7 +31,7 @@ function clearTimeoutList(){
 })
 
 // var bpm = 120
-var bpm = 120
+var bpm = 150
 
 function quarterNotesToMs(quarterNotes, bpm){
 	return quarterNotes / bpm * 60 * 1000
